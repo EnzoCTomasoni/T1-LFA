@@ -205,12 +205,15 @@ public class Main {
         
         //transições de q8
         matriz[get_string_ref(estados, "q8")][get_char_ref(alfabeto, 'w')] = get_string_ref(estados, "q9");
+        matriz[get_string_ref(estados, "q8")][get_char_ref(alfabeto, 'W')] = get_string_ref(estados, "q9");
         
         //transições de q9
         matriz[get_string_ref(estados, "q9")][get_char_ref(alfabeto, 'w')] = get_string_ref(estados, "q10");
+        matriz[get_string_ref(estados, "q9")][get_char_ref(alfabeto, 'W')] = get_string_ref(estados, "q10");
         
         //transições de q10
         matriz[get_string_ref(estados, "q10")][get_char_ref(alfabeto, 'w')] = get_string_ref(estados, "q11");
+        matriz[get_string_ref(estados, "q10")][get_char_ref(alfabeto, 'W')] = get_string_ref(estados, "q11");
         
         //transições de q11
         matriz[get_string_ref(estados, "q11")][get_char_ref(alfabeto, '.')] = get_string_ref(estados, "q12");
