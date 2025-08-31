@@ -52,7 +52,7 @@ public class Main {
     public static void main(String[] args) {
         // instancia e usa objeto que captura código-fonte de páginas Web
         CapturaRecursosWeb crw = new CapturaRecursosWeb();
-        crw.getListaRecursos().add("https://www.univali.br/");
+        crw.getListaRecursos().add("https://github.com/EnzoCTomasoni/T1-LFA");
         ArrayList<String> listaCodigos = crw.carregarRecursos();
 
         String codigoHTML = listaCodigos.get(0);
@@ -167,8 +167,12 @@ public class Main {
         int[][] matriz = new int[12][77];
 
         //transições de q0
+        //inicia em https ou http
         matriz[get_string_ref(estados, "q0")][get_char_ref(alfabeto, 'h')] = get_string_ref(estados, "q1");
         matriz[get_string_ref(estados, "q0")][get_char_ref(alfabeto, 'H')] = get_string_ref(estados, "q1");
+        //inicia em www
+        matriz[get_string_ref(estados, "q0")][get_char_ref(alfabeto, 'w')] = get_string_ref(estados, "q8");
+        matriz[get_string_ref(estados, "q0")][get_char_ref(alfabeto, 'W')] = get_string_ref(estados, "q8");
 
         //transições de q1
         matriz[get_string_ref(estados, "q1")][get_char_ref(alfabeto, 't')] = get_string_ref(estados, "q2");
@@ -183,8 +187,10 @@ public class Main {
         matriz[get_string_ref(estados, "q3")][get_char_ref(alfabeto, 'P')] = get_string_ref(estados, "q4");
 
         //transições de q4
+        //https
         matriz[get_string_ref(estados, "q4")][get_char_ref(alfabeto, 's')] = get_string_ref(estados, "q4");
         matriz[get_string_ref(estados, "q4")][get_char_ref(alfabeto, 'S')] = get_string_ref(estados, "q4");
+        //http
         matriz[get_string_ref(estados, "q4")][get_char_ref(alfabeto, ':')] = get_string_ref(estados, "q5");
 
         //transições de q5
