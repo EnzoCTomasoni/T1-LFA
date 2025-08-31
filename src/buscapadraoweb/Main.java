@@ -58,7 +58,7 @@ public class Main {
         String codigoHTML = listaCodigos.get(0);
 
         //mapa do alfabeto
-        char[] alfabeto = new char[77];
+        char[] alfabeto = new char[84];
 
         alfabeto[0] = 'a';
         alfabeto[1] = 'b';
@@ -140,10 +140,17 @@ public class Main {
         alfabeto[74] = ',';
         alfabeto[75] = ':';
         alfabeto[76] = '/';
-
+        
+        alfabeto[77] = '%';
+        alfabeto[78] = '&';
+        alfabeto[79] = ';';
+        alfabeto[80] = '@';
+        alfabeto[81] = '=';
+        alfabeto[82] = '^';
+        alfabeto[83] = '?';
 
         //mapa de estados
-        String[] estados = new String[13];
+        String[] estados = new String[21];
         estados[0] = "q0";  // estado inicial
         estados[1] = "q1";  // q0 + 'h'
         estados[2] = "q2";  // q1 + 't'
@@ -156,24 +163,36 @@ public class Main {
         estados[9] = "q9";  // q1 + 'w' ou q8 + 'w'
         estados[10] = "q10";  // q9 + 'w'
         estados[11] = "q11";  // q10 + 'w'
-        estados[12] = "q12";  // q11 + '.' ou loop de caracteres da URL (estado final)
+        estados[12] = "q12";  // q11 + '.' ou loop de caracteres da URL
+        
+        estados[13] = "q13"; // q12 + '.'
+        estados[14] = "q14"; // q13 + qualquer letra
+        estados[15] = "q15"; // q14 + qualquer letra (final)
+        estados[16] = "q16"; // q15 + qualquer letra (final)
+        estados[17] = "q17"; // q16 + '.'
+        estados[18] = "q18"; // q17 + qualquer letra
+        estados[19] = "q19"; // q18 + qualquer letra (final)
+        estados[20] = "q20"; // q15 + '/' ou q16 + '/' ou q19 + '/' ou ele mesmo em loop (final)
         
         String estado_inicial = "q0";
         
         //estados finais
-        String[] estados_finais = new String[1];
-        estados_finais[0] = "q12";
+        String[] estados_finais = new String[4];
+        estados_finais[0] = "q15";
+        estados_finais[1] = "q16";
+        estados_finais[2] = "q19";
+        estados_finais[3] = "q20";
 
         //tabela de transição da AFD para reconhecimento de URLs
-        int[][] matriz = new int[13][77];
+        int[][] matriz = new int[21][84];
 
         //transições de q0
         //inicia em https ou http
         matriz[get_string_ref(estados, "q0")][get_char_ref(alfabeto, 'h')] = get_string_ref(estados, "q1");
         matriz[get_string_ref(estados, "q0")][get_char_ref(alfabeto, 'H')] = get_string_ref(estados, "q1");
         //inicia em www
-        matriz[get_string_ref(estados, "q0")][get_char_ref(alfabeto, 'w')] = get_string_ref(estados, "q8");
-        matriz[get_string_ref(estados, "q0")][get_char_ref(alfabeto, 'W')] = get_string_ref(estados, "q8");
+        matriz[get_string_ref(estados, "q0")][get_char_ref(alfabeto, 'w')] = get_string_ref(estados, "q9");
+        matriz[get_string_ref(estados, "q0")][get_char_ref(alfabeto, 'W')] = get_string_ref(estados, "q9");
 
         //transições de q1
         matriz[get_string_ref(estados, "q1")][get_char_ref(alfabeto, 't')] = get_string_ref(estados, "q2");
@@ -283,7 +302,6 @@ public class Main {
         matriz[get_string_ref(estados, "q12")][get_char_ref(alfabeto, '9')] = get_string_ref(estados, "q12");
         matriz[get_string_ref(estados, "q12")][get_char_ref(alfabeto, '-')] = get_string_ref(estados, "q12");
         matriz[get_string_ref(estados, "q12")][get_char_ref(alfabeto, '_')] = get_string_ref(estados, "q12");
-        matriz[get_string_ref(estados, "q12")][get_char_ref(alfabeto, '.')] = get_string_ref(estados, "q12");
         matriz[get_string_ref(estados, "q12")][get_char_ref(alfabeto, '!')] = get_string_ref(estados, "q12");
         matriz[get_string_ref(estados, "q12")][get_char_ref(alfabeto, '~')] = get_string_ref(estados, "q12");
         matriz[get_string_ref(estados, "q12")][get_char_ref(alfabeto, '#')] = get_string_ref(estados, "q12");
@@ -296,6 +314,380 @@ public class Main {
         matriz[get_string_ref(estados, "q12")][get_char_ref(alfabeto, ',')] = get_string_ref(estados, "q12");
         matriz[get_string_ref(estados, "q12")][get_char_ref(alfabeto, ':')] = get_string_ref(estados, "q12");
         matriz[get_string_ref(estados, "q12")][get_char_ref(alfabeto, '/')] = get_string_ref(estados, "q12");
+        
+        matriz[get_string_ref(estados, "q12")][get_char_ref(alfabeto, '%')] = get_string_ref(estados, "q12");
+        matriz[get_string_ref(estados, "q12")][get_char_ref(alfabeto, '&')] = get_string_ref(estados, "q12");
+        matriz[get_string_ref(estados, "q12")][get_char_ref(alfabeto, ';')] = get_string_ref(estados, "q12");
+        matriz[get_string_ref(estados, "q12")][get_char_ref(alfabeto, '=')] = get_string_ref(estados, "q12");
+        matriz[get_string_ref(estados, "q12")][get_char_ref(alfabeto, '^')] = get_string_ref(estados, "q12");
+        matriz[get_string_ref(estados, "q12")][get_char_ref(alfabeto, '@')] = get_string_ref(estados, "q12");
+        matriz[get_string_ref(estados, "q12")][get_char_ref(alfabeto, '?')] = get_string_ref(estados, "q12");
+        matriz[get_string_ref(estados, "q12")][get_char_ref(alfabeto, '.')] = get_string_ref(estados, "q13");
+
+        //transições de q13
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'a')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'b')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'c')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'd')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'e')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'f')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'g')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'h')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'i')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'j')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'k')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'l')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'm')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'n')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'o')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'p')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'q')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'r')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 's')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 't')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'u')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'v')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'w')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'x')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'y')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'z')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'A')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'B')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'C')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'D')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'E')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'F')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'G')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'H')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'I')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'J')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'K')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'L')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'M')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'N')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'O')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'P')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'Q')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'R')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'S')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'T')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'U')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'V')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'W')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'X')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'Y')] = get_string_ref(estados, "q14");
+        matriz[get_string_ref(estados, "q13")][get_char_ref(alfabeto, 'Z')] = get_string_ref(estados, "q14");
+        
+        //transições de q14
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'a')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'b')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'c')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'd')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'e')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'f')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'g')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'h')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'i')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'j')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'k')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'l')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'm')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'n')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'o')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'p')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'q')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'r')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 's')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 't')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'u')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'v')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'w')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'x')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'y')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'z')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'A')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'B')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'C')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'D')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'E')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'F')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'G')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'H')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'I')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'J')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'K')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'L')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'M')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'N')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'O')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'P')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'Q')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'R')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'S')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'T')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'U')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'V')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'W')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'X')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'Y')] = get_string_ref(estados, "q15");
+        matriz[get_string_ref(estados, "q14")][get_char_ref(alfabeto, 'Z')] = get_string_ref(estados, "q15");
+
+        //transições de q15
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'a')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'b')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'c')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'd')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'e')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'f')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'g')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'h')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'i')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'j')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'k')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'l')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'm')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'n')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'o')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'p')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'q')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'r')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 's')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 't')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'u')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'v')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'w')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'x')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'y')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'z')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'A')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'B')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'C')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'D')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'E')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'F')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'G')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'H')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'I')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'J')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'K')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'L')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'M')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'N')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'O')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'P')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'Q')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'R')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'S')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'T')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'U')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'V')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'W')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'X')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'Y')] = get_string_ref(estados, "q16");
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, 'Z')] = get_string_ref(estados, "q16");
+        
+        matriz[get_string_ref(estados, "q15")][get_char_ref(alfabeto, '/')] = get_string_ref(estados, "q20");
+
+        //transições de q16
+        matriz[get_string_ref(estados, "q16")][get_char_ref(alfabeto, '/')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q16")][get_char_ref(alfabeto, '.')] = get_string_ref(estados, "q17");
+        
+        //transições de q17
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'a')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'b')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'c')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'd')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'e')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'f')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'g')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'h')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'i')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'j')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'k')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'l')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'm')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'n')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'o')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'p')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'q')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'r')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 's')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 't')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'u')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'v')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'w')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'x')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'y')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'z')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'A')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'B')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'C')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'D')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'E')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'F')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'G')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'H')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'I')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'J')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'K')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'L')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'M')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'N')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'O')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'P')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'Q')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'R')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'S')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'T')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'U')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'V')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'W')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'X')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'Y')] = get_string_ref(estados, "q18");
+        matriz[get_string_ref(estados, "q17")][get_char_ref(alfabeto, 'Z')] = get_string_ref(estados, "q18");
+
+        //transições de q18
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'a')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'b')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'c')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'd')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'e')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'f')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'g')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'h')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'i')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'j')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'k')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'l')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'm')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'n')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'o')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'p')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'q')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'r')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 's')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 't')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'u')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'v')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'w')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'x')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'y')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'z')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'A')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'B')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'C')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'D')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'E')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'F')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'G')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'H')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'I')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'J')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'K')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'L')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'M')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'N')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'O')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'P')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'Q')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'R')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'S')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'T')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'U')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'V')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'W')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'X')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'Y')] = get_string_ref(estados, "q19");
+        matriz[get_string_ref(estados, "q18")][get_char_ref(alfabeto, 'Z')] = get_string_ref(estados, "q19");
+
+        //transições de q19
+        matriz[get_string_ref(estados, "q19")][get_char_ref(alfabeto, '/')] = get_string_ref(estados, "q20");
+        
+        //transições de q20
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'a')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'b')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'c')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'd')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'e')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'f')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'g')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'h')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'i')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'j')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'k')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'l')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'm')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'n')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'o')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'p')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'q')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'r')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 's')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 't')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'u')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'v')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'w')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'x')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'y')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'z')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'A')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'B')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'C')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'D')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'E')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'F')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'G')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'H')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'I')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'J')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'K')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'L')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'M')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'N')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'O')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'P')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'Q')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'R')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'S')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'T')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'U')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'V')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'W')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'X')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'Y')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, 'Z')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, '0')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, '1')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, '2')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, '3')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, '4')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, '5')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, '6')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, '7')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, '8')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, '9')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, '-')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, '_')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, '!')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, '~')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, '#')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, '$')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, '\'')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, '(')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, ')')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, '*')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, '+')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, ',')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, ':')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, '/')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, '%')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, '&')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, ';')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, '=')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, '^')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, '@')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, '?')] = get_string_ref(estados, "q20");
+        matriz[get_string_ref(estados, "q20")][get_char_ref(alfabeto, '.')] = get_string_ref(estados, "q20");
 
 
         
