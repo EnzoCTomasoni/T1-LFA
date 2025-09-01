@@ -1,0 +1,36 @@
+S =  h A | [j] A|   w H| [k] H
+A = [l] B|   t B
+B = [l] C|   t C
+C = [m] D|   p D
+D =   : F|   s E| [n] E
+E =   : F
+F =   / G
+G =   / H
+H = [k] I|   w I
+I = [k] J|   w J
+J = [k] K|   w K
+K = [h] K|   . L
+L = [g] M
+M = [g] N
+N = [g] O|   / S| FINAL
+O =   / S|   . P| FINAL
+P = [g] Q
+Q = [g] R
+R =   / S|        FINAL
+S = [i] S|        FINAL
+
+[g] = ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz
+
+[h] = ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&()*-+=,:;/?\^~_
+
+[i] = ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&()*-+=,.:;/?\^~_
+
+[j] = H
+
+[k] = W
+
+[l] = T
+
+[m] = P
+
+[n] = S
